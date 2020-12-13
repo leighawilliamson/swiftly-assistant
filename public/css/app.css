@@ -13,12 +13,6 @@ body {
 }
 
 /*
-.chatLauncher.chatlauncher_button_text::after {
-    content:"DART Questions?"
-}
-*/
-
-/*
 * typically you don't need to modify the CSS configuration below this point in the file
 */
 @keyframes slideInRight {
