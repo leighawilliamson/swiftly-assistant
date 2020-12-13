@@ -1,0 +1,69 @@
+<html>
+ <head>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="shortcut icon" href="favicon.png" type="image/png">
+  <!-- app.css file provides the values for background image, chatlauncher button color and text -->
+  <link rel="stylesheet" href="css/app.css">
+  <title>Watson Assistant</title>
+ </head>
+
+ <body>
+    <!-- embed chatlauncher button
+    We want to hide this element initially, because Web Chat isn't ready yet. -->
+    <div>
+    <button type="button" class="chatLauncher" style="display:none;">
+        <div id="myDIV">DART Questions?</div>
+        <!-- b class="chatlauncher_button_text" / -->
+    </button>
+    </div>
+
+    <!-- load Watson Assistant web chat widget -->
+    <script
+        src="https://web-chat.global.assistant.watson.cloud.ibm.com/loadWatsonAssistantChat.js">
+    </script> 
+
+    <!-- load application-specific configuration variables for the widget and
+        apply them to the widget and enable widget to open chat window when clicked -->
+    <script type="module">
+        /* Pull in assistant configuration variable values from assistant_config.js file.
+           The assistant_config.js file provides values for the HTML page title,
+           Assistant integrationID and region, and text for the chat window title bar.
+        */
+        import JsonObj from './assistant_config.js';
+        var assistant_config = {
+            integrationID: JsonObj.integrationID,
+            region: JsonObj.region,
+            showLauncher: false,
+            __ibm__: {
+                botNameOverride: JsonObj.bot_titlebar
+            }
+        }
+        document.querySelector('title').textContent = JsonObj.page_title;
+        window.loadWatsonAssistantChat(assistant_config).then(function(instance) {
+            // Select the button element from the page.
+            var button = document.querySelector('.chatLauncher');
+
+            // Add the event listener to open your Web Chat window when clicked
+            button.addEventListener('click', function() {
+                instance.openWindow();
+            });
+
+            // Render the Web Chat window. Nothing appears on the page, because the launcher is
+            // hidden and the Web Chat window is closed by default.
+            instance.render().then(function() {
+                // Now that Web Chat has been rendered (but is still closed), we make the
+                // custom launcher button visible.
+                button.style.display = 'block';
+                // Make parent div viewable and 0px height
+                // to avoid random white space on the bottom of the page
+                button.parentElement.style.display = 'block';
+                button.parentElement.style.visibility = 'visible';
+                button.parentElement.style.height = '0px';
+                button.classList.add('open');
+            });
+        });
+    </script>
+ </body>
+</html>
